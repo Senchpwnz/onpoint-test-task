@@ -20,9 +20,9 @@ const slider = {
 
             // Mouse events 
             slide.addEventListener('mousedown', this.touchStart(index))
-            slide.addEventListener('mouseup', this.touchEnd)
-            slide.addEventListener('mouseleave', this.touchEnd)
-            slide.addEventListener('mousemove', this.touchMove)
+            slide.addEventListener('mouseup', this.touchEnd.bind(this))
+            slide.addEventListener('mouseleave', this.touchEnd.bind(this))
+            slide.addEventListener('mousemove', this.touchMove.bind(this))
         })
     },
     touchStart(index) {
@@ -36,6 +36,7 @@ const slider = {
     },
     touchEnd() {
         this.isDragging = false;
+        cancelAnimationFrame(this.animationID);
 
         const movedBy = this.currentTranslate - this.previousTranslate
 
@@ -57,13 +58,12 @@ const slider = {
     animation() {
         this.setSliderPosition()
         requestAnimationFrame(this.animation.bind(this))
-        if (!this.isDragging) cancelAnimationFrame(this.animationID);
     },
     setSliderPosition() {
         this.SLIDER.style.transform = `translateX(${this.currentTranslate}px)`
     },
     setPositionByIndex() {
-        this.currentTranslate = this.currentIndex * -window.innerWidth
+        this.currentTranslate = this.currentIndex * -sliderWrap.offsetWidth
         this.previousTranslate = this.currentTranslate
         requestAnimationFrame(this.animation.bind(this))
     }
