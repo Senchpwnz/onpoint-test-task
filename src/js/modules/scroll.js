@@ -15,57 +15,63 @@ const scroll = {
     listBreakpoint: 0,
     ratio: 0,
     animationID: 0,
-    touchStart(event) {
-        event.stopPropagation();
-        this.startPosition = this.getPositionY(event);
-        this.isDragging = true;
+    start() {
+        this.thumb.addEventListener('touchstart', this.touchStart());
+        this.thumb.addEventListener('touchend', this.touchEnd());
+        this.thumb.addEventListener('touchmove', this.touchMove());
 
-        this.animationID = requestAnimationFrame(this.animation.bind(this));
+        this.thumb.addEventListener('mousedown', this.touchStart());
+        this.thumb.addEventListener('mouseup', this.touchEnd());
+        this.thumb.addEventListener('mouseleave', this.touchEnd());
+        this.thumb.addEventListener('mousemove', this.touchMove());
 
+        this.setRatio()
+    },
+    touchStart() {
+        return (event) => {
+            event.stopPropagation(event);
+            this.startPosition = this.getPositionY(event);
+            this.isDragging = true;
+
+            this.animationID = requestAnimationFrame(this.animation());
+        }
     },
     touchEnd() {
-        this.isDragging = false;
-        this.previousTranslate = this.currentTranslate;
-        cancelAnimationFrame(this.animationID)
+        return (event) => {
+            this.isDragging = false;
+            this.previousTranslate = this.currentTranslate;
+            cancelAnimationFrame(this.animationID)
+        }
     },
-    touchMove(event) {
-        if (this.isDragging) {
-            const currentPosition = this.getPositionY(event)
-            this.currentTranslate = this.previousTranslate + currentPosition - this.startPosition;
-            if (this.currentTranslate <= 0) this.currentTranslate = 0
-            if (this.currentTranslate >= this.breakpoint) this.currentTranslate = this.breakpoint;
-            this.listTranslate = this.currentTranslate * -this.ratio;
+    touchMove() {
+        return (event) => {
+            if (this.isDragging) {
+                const currentPosition = this.getPositionY(event)
+                this.currentTranslate = this.previousTranslate + currentPosition - this.startPosition;
+                if (this.currentTranslate <= 0) this.currentTranslate = 0
+                if (this.currentTranslate >= this.breakpoint) this.currentTranslate = this.breakpoint;
+                this.listTranslate = this.currentTranslate * -this.ratio;
+            }
         }
     },
     getPositionY(event) {
         return event.type.includes('mouse') ? event.pageY : event.touches[0].clientY;
     },
     animation() {
-        this.setScrollPosition();
-        requestAnimationFrame(this.animation.bind(this));
+        return () => {
+            this.setScrollPosition();
+            if (this.isDragging) requestAnimationFrame(this.animation());
+        }
     },
     setScrollPosition() {
         this.thumb.style.transform = `translateY(${this.currentTranslate}px)`;
         this.list.style.transform = `translateY(${this.listTranslate}px)`;
     },
-    startEvents() {
-        this.thumb.addEventListener('touchstart', this.touchStart.bind(this));
-        this.thumb.addEventListener('touchend', this.touchEnd.bind(this));
-        this.thumb.addEventListener('touchmove', this.touchMove.bind(this));
-
-        this.thumb.addEventListener('mousedown', this.touchStart.bind(this));
-        this.thumb.addEventListener('mouseup', this.touchEnd.bind(this));
-        this.thumb.addEventListener('mouseleave', this.touchEnd.bind(this));
-        this.thumb.addEventListener('mousemove', this.touchMove.bind(this));
-
+    setRatio() {
         this.breakpoint = this.bar.offsetHeight - this.thumb.offsetHeight;
         this.listBreakpoint = this.list.offsetHeight - this.list.parentNode.offsetHeight;
         this.ratio = this.listBreakpoint / this.breakpoint;
-
     },
-
-
-
 }
 
 export default scroll

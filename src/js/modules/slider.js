@@ -1,71 +1,121 @@
+import { animationStart, animationPrepare } from './events.js'
+
 const sliderWrap = document.querySelector('.slider-container'),
-    slides = Array.from(document.querySelectorAll('.slide'));
+    slides = Array.from(document.querySelectorAll('.slide')),
+    startButton = document.querySelector('.slide1__button'),
+    homeButton = document.querySelector('.header__logo');
 
 const slider = {
     SLIDER: sliderWrap,
     SLIDES: slides,
+    startButton: startButton,
+    homeButton: homeButton,
     isDragging: false,
     startPosition: 0,
     currentTranslate: 0,
     previousTranslate: 0,
     animationID: 0,
     currentIndex: 0,
+    previousIndex: 0,
     start() {
-        this.SLIDES.forEach((slide, index) => {
+        this.homeButton.addEventListener('touchstart', this.setPositionOnSlide(0));
+        this.homeButton.addEventListener('mousedown', this.setPositionOnSlide(0));
+        this.homeButton.addEventListener('touchend', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        this.homeButton.addEventListener('mouseup', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
 
+        this.startButton.addEventListener('touchstart', this.setPositionOnSlide(1));
+        this.startButton.addEventListener('mousedown', this.setPositionOnSlide(1));
+        this.startButton.addEventListener('touchend', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        this.startButton.addEventListener('mouseup', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        this.SLIDES.forEach((slide, index) => {
             // Touch events
-            slide.addEventListener('touchstart', this.touchStart(index))
-            slide.addEventListener('touchend', this.touchEnd.bind(this))
-            slide.addEventListener('touchmove', this.touchMove.bind(this))
+            slide.addEventListener('touchstart', this.touchStart(index));
+            slide.addEventListener('touchend', this.touchEnd());
+            slide.addEventListener('touchmove', this.touchMove());
 
             // Mouse events 
-            slide.addEventListener('mousedown', this.touchStart(index))
-            slide.addEventListener('mouseup', this.touchEnd.bind(this))
-            slide.addEventListener('mouseleave', this.touchEnd.bind(this))
-            slide.addEventListener('mousemove', this.touchMove.bind(this))
+            slide.addEventListener('mousedown', this.touchStart(index));
+            slide.addEventListener('mouseup', this.touchEnd());
+            slide.addEventListener('mouseleave', this.touchEnd());
+            slide.addEventListener('mousemove', this.touchMove());
         })
     },
     touchStart(index) {
         return (event) => {
+
             this.currentIndex = index;
             this.startPosition = this.getPositionX(event)
             this.isDragging = true;
 
-            this.animationID = requestAnimationFrame(this.animation.bind(this))
+            this.animationID = requestAnimationFrame(this.animation())
+
         }
     },
     touchEnd() {
-        this.isDragging = false;
-        cancelAnimationFrame(this.animationID);
+        return (event) => {
 
-        const movedBy = this.currentTranslate - this.previousTranslate
+            this.isDragging = false;
+            cancelAnimationFrame(this.animationID);
 
-        if (movedBy < -100 && this.currentIndex < this.SLIDES.length - 1) this.currentIndex += 1
+            const movedBy = this.currentTranslate - this.previousTranslate
 
-        if (movedBy > 100 && this.currentIndex > 0) this.currentIndex -= 1
+            this.previousIndex = this.currentIndex;
 
-        this.setPositionByIndex()
+            if (movedBy < -100 && this.currentIndex < this.SLIDES.length - 1) this.currentIndex += 1
+
+            if (movedBy > 100 && this.currentIndex > 0) this.currentIndex -= 1
+
+            this.setPositionByIndex()
+        }
     },
-    touchMove(event) {
-        if (this.isDragging) {
-            const currentPosition = this.getPositionX(event)
-            this.currentTranslate = this.previousTranslate + currentPosition - this.startPosition
+    touchMove() {
+        return (event) => {
+            if (this.isDragging) {
+                const currentPosition = this.getPositionX(event)
+                this.currentTranslate = this.previousTranslate + currentPosition - this.startPosition;
+            }
         }
     },
     getPositionX(event) {
         return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
     },
     animation() {
-        this.setSliderPosition()
-        requestAnimationFrame(this.animation.bind(this))
+        return () => {
+            this.setSliderPosition()
+            if (this.isDragging) requestAnimationFrame(this.animation())
+        }
+
     },
     setSliderPosition() {
-        this.SLIDER.style.transform = `translateX(${this.currentTranslate}px)`
+        this.SLIDER.style.transform = `translateX(${this.currentTranslate}px)`;
     },
     setPositionByIndex() {
         this.currentTranslate = this.currentIndex * -sliderWrap.offsetWidth
         this.previousTranslate = this.currentTranslate
-        requestAnimationFrame(this.animation.bind(this))
-    }
+        this.setSliderPosition();
+        if (this.currentIndex == 0) document.dispatchEvent(animationPrepare);
+        if (this.previousIndex == 0 && this.currentIndex == 1) document.dispatchEvent(animationStart);
+    },
+    setPositionOnSlide(index) {
+        return (event) => {
+            this.previousIndex = this.currentIndex;
+            this.currentIndex = index;
+            this.setPositionByIndex();
+        }
+    },
+
 }
 export default slider

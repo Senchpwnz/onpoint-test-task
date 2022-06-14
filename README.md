@@ -1,2 +1,4 @@
 # onpoint-test-task
-Test task to create slider app
+Тестовое задание: слайдер без использования сторонних библиотек, сделан для ipad в разрешении 1024x768, но так же работает и на десктоп девайсах.
+Developer - npm run dev
+Build - npm run build

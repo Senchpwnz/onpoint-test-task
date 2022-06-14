@@ -1,5 +1,7 @@
 @import "fonts";
 
+
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,11 +12,16 @@
 body,
 html {
     font-family: Gilroy, DINPro;
+    font-size: 20px;
+}
+
+img {
+    -webkit-user-drag: none;
 }
 
 .header {
     position: fixed;
-    z-index: 5;
+    z-index: 1;
 
     &__logo {
         width: 153px;
@@ -38,6 +45,7 @@ html {
     position: absolute;
     width: 300%;
     height: 100%;
+    z-index: 0;
 }
 
 .background img {
@@ -64,6 +72,7 @@ html {
 
     &__hello {
         font-size: 18px;
+        font-family: DINPro;
     }
 
     &__text {
@@ -114,6 +123,7 @@ html {
         height: 71px;
         bottom: 194px;
         left: 24px;
+        animation: moving-1 10s linear infinite;
     }
 
     &__detail2 img {
@@ -127,11 +137,13 @@ html {
         height: 126px;
         bottom: 0;
         right: 257px;
+        animation: moving-1 20s ease infinite;
     }
 
     &__detail3 img {
         width: 100%;
         height: 100%;
+        animation: scale 16s ease-in-out infinite;
     }
 
     &__detail4 {
@@ -139,28 +151,134 @@ html {
         width: 110px;
         height: 113px;
         right: 57px;
-        top: 201px
+        top: 201px;
+        animation: moving-2 10s linear infinite;
     }
 
     &__detail4 img {
         width: 100%;
         height: 100%;
+        animation: rotate360 20s linear infinite;
     }
 
     &__detail5 {
         position: absolute;
-        width: 82px;
+        width: 63px;
         height: 57px;
         right: 217px;
         top: 62px;
+        animation: scale 20s linear infinite;
+
     }
 
     &__detail5 img {
         width: 100%;
         height: 100%;
     }
-
 }
+
+@keyframes moving-1 {
+    0% {
+        transform: translate(0px, 0px);
+    }
+
+    20% {
+        transform: translate(20px, 5px);
+    }
+
+    40% {
+        transform: translate(30px, 10px);
+    }
+
+    60% {
+        transform: translate(15px, 15px);
+    }
+
+    80% {
+        transform: translate(5px, 5px);
+    }
+
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes moving-2 {
+    0% {
+        transform: translate(0px, 0px);
+    }
+
+    20% {
+        transform: translate(10px, 20px);
+    }
+
+    40% {
+        transform: translate(0px, 15px);
+    }
+
+    60% {
+        transform: translate(-20px, 5px);
+    }
+
+    80% {
+        transform: translate(-10px, 5px);
+    }
+
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes rotate360 {
+    0% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(90deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    75% {
+        transform: rotate(270deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes scale {
+    0% {
+        transform: scale(1);
+    }
+
+    20% {
+        transform: scale(1.2);
+    }
+
+    40% {
+        transform: scale(1.4);
+    }
+
+    60% {
+        transform: scale(1.1);
+    }
+
+    80% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+
 
 .slide2 {
 
@@ -172,6 +290,7 @@ html {
             top: 0;
             width: 100%;
             height: 100%;
+
         }
 
         &__detail1 {
@@ -208,7 +327,8 @@ html {
 
     &__title {
         font-size: 27px;
-        margin: 132px 0 0 69px
+        margin: 132px 0 0 69px;
+        font-family: DINPro;
     }
 
     &__content {
@@ -220,6 +340,7 @@ html {
         height: 450px;
         width: 775px;
         background-color: #fff;
+        font-family: DINPro;
         border-radius: 38px;
         padding: 32px;
         box-shadow: 0px 0px 50px 0px #dde8ec;
@@ -238,6 +359,12 @@ html {
         transition: transform 0.3s ease-out;
     }
 }
+
+.trans-prop {
+    transition: all 1s ease-out;
+}
+
+
 
 .scroll {
 
@@ -267,22 +394,23 @@ html {
 
     &__bottle {
         position: absolute;
-        z-index: 10;
+        z-index: 15;
         top: 65px;
         left: 10px;
     }
 
     &__header {
         margin: 160px 0 0 350px;
-        z-index: 10;
     }
 
     &__title {
         font-size: 27px;
+        font-family: DINPro;
     }
 
     &__brand {
         font-size: 95px;
+        z-index: 15;
     }
 
     &__preview {
@@ -290,9 +418,11 @@ html {
         height: 270px;
         display: flex;
         justify-content: space-between;
+        font-size: 25px;
     }
 
     &__message1 {
+        font-family: DINPro;
         flex: 0 0 414px;
         background-color: #fff;
         border-radius: 40px;
@@ -314,6 +444,7 @@ html {
     }
 
     &__message2 {
+        font-family: DINPro;
         flex: 0 0 150px;
         padding: 45px;
         background-color: #fff;
@@ -337,13 +468,174 @@ html {
         width: 100%;
         height: 100%;
     }
+}
 
+.pop {
+    display: none;
+    position: absolute;
+    left: 2048px;
+    top: 0;
+    width: 1024px;
+    height: 768px;
+    opacity: 0;
+    transition: opacity .2s ease-in;
+    z-index: 9;
+
+
+    &__background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #16273e;
+        opacity: .7;
+    }
+
+    &__body {
+        margin: 124px 61px 72px 140px;
+        padding: 40px 120px 0 212px;
+        background-color: #fff;
+        width: 823px;
+        height: 572px;
+        z-index: 10;
+        border-radius: 40px;
+    }
+
+    &__title {
+        font-size: 27px;
+        font-family: DINPro;
+    }
+
+    &__close {
+        position: absolute;
+        top: 34px;
+        right: 34px;
+        width: 48px;
+        height: 34px;
+    }
+
+
+    &__close::after,
+    &__close::before {
+        position: absolute;
+        content: '';
+        top: 50%;
+        height: 10%;
+        background-color: #000;
+        width: 100%;
+    }
+
+    &__close::before {
+        transform: rotate(45deg);
+    }
+
+    &__close::after {
+        transform: rotate(-45deg);
+    }
+
+    &__list {
+        margin: 140px 0 0 0;
+        background-color: #fff;
+        transition: opacity .5s ease;
+    }
+
+    &__item {
+        font-size: 25px;
+        margin: 0 0 14px 0;
+    }
+
+    &__number {
+        color: #8CC9E8;
+        font-weight: 900;
+    }
+
+    &__text {
+        font-family: DINPro;
+    }
 
 }
 
+.pagination {
+    position: absolute;
+    left: 212px;
+    bottom: 36px;
+    width: 90px;
+    height: 15px;
+    margin: 50px 0 0 0;
+    padding: 0px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__prev {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 12px;
+        height: 100%;
+    }
+
+    &__prev::before,
+    &__prev::after {
+        background-color: #000;
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 2px;
+    }
+
+    &__prev::before {
+        top: 25%;
+        transform: rotate(-45deg);
+    }
+
+    &__prev::after {
+        top: 75%;
+        transform: rotate(45deg);
+    }
+
+    &__next {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 12px;
+        height: 100%;
+    }
+
+    &__next::before,
+    &__next::after {
+        background-color: #000;
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 2px;
+    }
+
+    &__next::before {
+        top: 25%;
+        transform: rotate(45deg);
+    }
+
+    &__next::after {
+        top: 75%;
+        transform: rotate(-45deg);
+    }
+
+    &__dot {
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        border-radius: 50%;
+    }
+
+}
+
+.dot-active {
+    border: none;
+    background-color: #fc6da9;
+}
 
 .footer {
-    bottom: 30px;
+    bottom: 25px;
     position: fixed;
     z-index: 5;
 

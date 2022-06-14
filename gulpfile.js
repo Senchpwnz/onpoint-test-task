@@ -38,7 +38,7 @@ const fonts = gulp.series(otfToTtf, ttfToWoff, fontsStyle);
 const mainTasks = gulp.parallel(fonts, copy, html, scss, js, images, svgIcons);
 
 const dev = gulp.series(reset, mainTasks, gulp.parallel(watcher, server));
-const build = gulp.series(reset, mainTasks);
+const build = gulp.series(reset, mainTasks, server);
 
 const deployZip = gulp.series(reset, mainTasks, zip);
 
